@@ -48,7 +48,7 @@ const Home = () => {
       );
       setPage((prev) => prev + 1);
     } catch (error) {
-      console.error("Erro:", error);
+      // console.error("Erro:", error);
       setError(error);
       Alert.alert("Erro", "Não foi possível carregar os animes");
       fetchAnimes();

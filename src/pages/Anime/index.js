@@ -33,7 +33,8 @@ const AnimePage = ({ route }) => {
         setAnime(response.data.data);
         fetchCharacters();
       } catch (error) {
-        console.error("Erro ao buscar anime:", error);
+        // console.error("Erro ao buscar anime:", error);
+        fetchAnime(); // Tente novamente em caso de erro
       }
     };
     const fetchCharacters = async () => {
