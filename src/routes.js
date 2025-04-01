@@ -3,6 +3,7 @@ import Home from "./pages/Home/index";
 import Login from "./pages/Login/index";
 import { useFonts } from "expo-font";
 import Register from "./pages/Register/index";
+import Watched from "./pages/Watched";
 
 const Stack = createStackNavigator();
 const Routes = () => {
@@ -33,6 +34,11 @@ const Routes = () => {
       <Stack.Screen
         name="Home"
         component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Watched"
+        component={Watched}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
