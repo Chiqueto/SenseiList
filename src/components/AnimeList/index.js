@@ -9,37 +9,51 @@ import {
 } from "react-native";
 
 const AnimeList = ({
-  animes,
+  animes = [],
   onEndReached,
   ListFooterComponent,
   onEndReachedThreshold = 0.4,
-  watchedAnimes,
+  watchedAnimes = [],
   onAddToWatched,
   onRemoveFromWatched,
-  isAnimeWatched,
+  isAnimeWatched = (animeId) =>
+    watchedAnimes.some((anime) => anime.mal_id === animeId), // Valor padrão
+  isWatchedPage = false, // Nova prop para identificar a página de assistidos
 }) => {
   const renderItem = ({ item }) => (
     <View style={styles.animeCard}>
       <View style={styles.animeInfo}>
         <Text style={styles.animeTitle}>{item.title}</Text>
         <Text style={styles.animeRating}>{item.score || "N/A"}</Text>
-        <TouchableOpacity
-          onPress={() =>
-            isAnimeWatched(item.mal_id)
-              ? onRemoveFromWatched(item.mal_id)
-              : onAddToWatched(item)
-          }
-          style={[
-            styles.watchButton,
-            isAnimeWatched(item.mal_id) && styles.watchedButton,
-          ]}
-        >
-          <Text style={styles.watchButtonText}>
-            {isAnimeWatched(item.mal_id)
-              ? "✓ Assistido"
-              : "Marcar como assistido"}
-          </Text>
-        </TouchableOpacity>
+
+        {isWatchedPage ? (
+          // Botão de remover para a página de assistidos
+          <TouchableOpacity
+            onPress={() => onRemoveFromWatched?.(item.mal_id)}
+            style={[styles.watchButton, styles.removeButton]}
+          >
+            <Text style={styles.watchButtonText}>Remover</Text>
+          </TouchableOpacity>
+        ) : (
+          // Botão normal para marcar como assistido
+          <TouchableOpacity
+            onPress={() =>
+              isAnimeWatched(item.mal_id)
+                ? onRemoveFromWatched?.(item.mal_id)
+                : onAddToWatched?.(item)
+            }
+            style={[
+              styles.watchButton,
+              isAnimeWatched(item.mal_id) && styles.watchedButton,
+            ]}
+          >
+            <Text style={styles.watchButtonText}>
+              {isAnimeWatched(item.mal_id)
+                ? "✓ Assistido"
+                : "Marcar como assistido"}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Image
         source={{ uri: item.images.jpg.image_url }}
@@ -112,6 +126,9 @@ const styles = StyleSheet.create({
   },
   watchedButton: {
     backgroundColor: "#2196F3",
+  },
+  removeButton: {
+    backgroundColor: "#F44336",
   },
   watchButtonText: {
     color: "white",
