@@ -179,4 +179,34 @@ export const s = StyleSheet.create({
     height: 20,
     tintColor: "#fff",
   },
+  videoContainer: {
+    width: "100%",
+    aspectRatio: 16 / 9, // Proporção widescreen padrão (16:9)
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: "#000", // Fundo preto para áreas não ocupadas pelo vídeo
+    borderRadius: 12, // Bordas arredondadas
+    overflow: "hidden", // Garante que o vídeo respeite as bordas arredondadas
+    elevation: 3, // Sombra no Android
+    shadowColor: colors.shadow, // Sombra no iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+
+  // Estilo do WebView/Video
+  video: {
+    width: "100%",
+    height: "100%",
+    alignSelf: "center", // Centraliza horizontalmente
+  },
+
+  // Estilo para mensagem quando não há trailer
+  noTrailerText: {
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    textAlign: "center",
+    marginVertical: 15,
+    fontStyle: "italic",
+  },
 });

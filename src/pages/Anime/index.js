@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import api from "../../services/api";
 import { s } from "./styles"; // Importe seus estilos
@@ -14,6 +15,8 @@ import GenreSlug from "../../components/GenreSlug";
 import CharacterCard from "../../components/CharacterCard";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { WebView } from "react-native-webview";
+import { colors } from "../../styles/colors";
 
 const AnimePage = ({ route }) => {
   const navigation = useNavigation();
@@ -159,6 +162,32 @@ const AnimePage = ({ route }) => {
               <Text style={s.noCharactersText}>
                 Nenhum personagem encontrado
               </Text>
+            )}
+          </View>
+          <View style={s.detail}>
+            <Text style={s.subitle}>Trailer:</Text>
+
+            {anime.trailer?.youtube_id ? (
+              <View style={s.videoContainer}>
+                <WebView
+                  style={s.video}
+                  javaScriptEnabled={true}
+                  domStorageEnabled={true}
+                  startInLoadingState={true}
+                  renderLoading={() => (
+                    <ActivityIndicator
+                      color={colors.primary}
+                      style={s.loadingIndicator}
+                    />
+                  )}
+                  allowsFullscreenVideo={true}
+                  source={{
+                    uri: anime.trailer.embed_url,
+                  }}
+                />
+              </View>
+            ) : (
+              <Text style={s.noTrailerText}>Trailer não disponível</Text>
             )}
           </View>
         </View>
