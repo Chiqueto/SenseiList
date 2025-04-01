@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { fontFamily } from "../../styles/theme";
+import { colors, fontFamily } from "../../styles/theme";
 
 export const s = StyleSheet.create({
   container: {
@@ -20,22 +20,20 @@ export const s = StyleSheet.create({
     color: "#FFF",
     fontSize: 16,
     fontFamily: fontFamily.fredoka_bold,
-    marginBottom: 4,
+    marginBottom: 5,
   },
   title: {
     color: "#FFF",
     fontSize: 40,
     fontFamily: fontFamily.poppins_medium,
+    marginBottom: 5,
   },
   subTitle: {
     color: "#FFF",
     fontSize: 16,
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "80%",
     fontFamily: fontFamily.poppins_light,
     marginBottom: 12,
+    textAlign: "center",
   },
   base: {
     color: "#FFF",
@@ -55,11 +53,11 @@ export const s = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
-    width: "80%",
+    width: "90%",
     marginHorizontal: 20,
   },
   inputArea: {
-    width: "80%",
+    width: "90%",
     paddingVertical: 8,
     textAlign: "left",
   },
@@ -67,9 +65,15 @@ export const s = StyleSheet.create({
     marginBottom: 10,
   },
   textButton: {
-    color: "#A53BF5",
+    color: colors.white,
+    textDecorationLine: "underline",
     fontSize: 16,
     fontFamily: fontFamily.poppins_light_italic,
     textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textButtonView: {
+    flexDirection: "row",
   },
 });

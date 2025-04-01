@@ -50,12 +50,12 @@ const Login = () => {
       <Text style={s.title}>Login</Text>
 
       <Text style={s.subTitle}>Faça seu login para acessar o aplicativo</Text>
-      <Text style={s.subTitle}>
-        Não tem uma conta?{" "}
+      <View style={s.textButtonView}>
+        <Text style={s.subTitle}>Não tem uma conta? </Text>
         <TouchableOpacity onPress={handleRegister}>
           <Text style={s.textButton}>Cadastre-se!</Text>
         </TouchableOpacity>
-      </Text>
+      </View>
 
       <View style={s.lineView}>
         <View style={s.line} />

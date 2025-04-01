@@ -44,12 +44,12 @@ const Register = () => {
       <Text style={s.subTitle}>
         Faça seu cadastro para começar a usar o aplicativo
       </Text>
-      <Text style={s.subTitle}>
-        Já tem uma conta?{" "}
-        <TouchableOpacity onPress={handleLogin}>
+      <View style={s.textButtonView}>
+        <Text style={s.subTitle}>Já tem uma conta? </Text>
+        <TouchableOpacity onPress={handleRegister}>
           <Text style={s.textButton}>Faça Login!</Text>
         </TouchableOpacity>
-      </Text>
+      </View>
 
       <View style={s.lineView}>
         <View style={s.line} />
