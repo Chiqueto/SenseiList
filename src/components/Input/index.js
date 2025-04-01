@@ -1,6 +1,6 @@
 import { TextInput } from "react-native";
 import { s } from "./styles";
-const input = ({ placeholder, onChangeText, isPassword }) => {
+const Input = ({ placeholder, onChangeText, isPassword, value }) => {
   return (
     <TextInput
       style={s.input}
@@ -8,8 +8,9 @@ const input = ({ placeholder, onChangeText, isPassword }) => {
       placeholderTextColor={"#737373"}
       onChangeText={onChangeText}
       secureTextEntry={isPassword ? isPassword : false}
+      value={value} // Adicionado para refletir o estado atual da busca
     />
   );
 };
 
-export default input;
+export default Input;

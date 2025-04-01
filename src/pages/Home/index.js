@@ -177,7 +177,11 @@ const Home = () => {
           onEndReached={loadMoreAnimes}
           onEndReachedThreshold={0.4}
           ListFooterComponent={renderFooter}
-          {...{ addToWatchedList, removeFromWatchedList, isAnimeWatched }}
+          {...{
+            onAddToWatched: addToWatchedList,
+            onRemoveFromWatched: removeFromWatchedList,
+            isAnimeWatched,
+          }}
           navigation={navigation}
         />
       )}
