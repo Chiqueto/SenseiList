@@ -33,6 +33,7 @@ export const s = StyleSheet.create({
     fontSize: 16,
     fontFamily: fontFamily.poppins_light,
     marginBottom: 12,
+    textAlign: "center",
   },
   base: {
     color: "#FFF",

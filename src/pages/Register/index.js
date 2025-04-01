@@ -46,7 +46,7 @@ const Register = () => {
       </Text>
       <View style={s.textButtonView}>
         <Text style={s.subTitle}>Já tem uma conta? </Text>
-        <TouchableOpacity onPress={handleRegister}>
+        <TouchableOpacity onPress={handleLogin}>
           <Text style={s.textButton}>Faça Login!</Text>
         </TouchableOpacity>
       </View>
