@@ -8,6 +8,16 @@ export const s = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 30,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 15,
+    width: "100%",
+  },
+  backButton: {
+    padding: 10,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -32,8 +42,8 @@ export const s = StyleSheet.create({
     fontFamily: fontFamily.poppins_bold,
     fontSize: 24,
     color: colors.textPrimary,
-    marginBottom: 15,
     textAlign: "center",
+    flex: 1,
   },
   image: {
     width: "100%",
@@ -77,7 +87,6 @@ export const s = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
   },
-  // Estilos adicionais para outros elementos que você possa adicionar
   infoContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -156,14 +165,9 @@ export const s = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-  headerContainer: {
-    position: "absolute",
-    top: 45,
-    left: 25,
-    zIndex: 10,
-  },
+
   backButton: {
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.2)",
     width: 40,
     height: 40,
     borderRadius: 20,

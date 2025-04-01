@@ -13,6 +13,7 @@ import { s } from "./styles"; // Importe seus estilos
 import GenreSlug from "../../components/GenreSlug";
 import CharacterCard from "../../components/CharacterCard";
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 const AnimePage = ({ route }) => {
   const navigation = useNavigation();
@@ -83,23 +84,21 @@ const AnimePage = ({ route }) => {
       source={require("../../../assets/bg-gradient-app.png")}
       style={s.container}
     >
-      <View style={s.headerContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={s.backButton}
-        >
-          <Image
-            source={require("../../../assets/icons/backArrow.png")}
-            style={s.backIcon}
-          />
-        </TouchableOpacity>
-      </View>
       <ScrollView
         style={s.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
         <View style={s.animeDetails}>
-          <Text style={s.title}>{anime.title}</Text>
+          <View style={s.header}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={s.backButton}
+            >
+              <Feather name="arrow-left" size={24} color="#000" />
+            </TouchableOpacity>
+            <Text style={s.title}>{anime.title}</Text>
+            <View style={{ width: 44 }} />
+          </View>
           <Image
             source={{ uri: anime.images.jpg.image_url }}
             style={s.image}
