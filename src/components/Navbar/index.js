@@ -7,13 +7,14 @@ const Navbar = () => {
 
   return (
     <View style={s.navbar}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      >
         <Image
           source={require("../../../assets/icons/homeIcon.png")}
           style={{ width: 32, height: 32 }}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
         />
       </TouchableOpacity>
       <TouchableOpacity>
