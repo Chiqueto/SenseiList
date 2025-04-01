@@ -51,6 +51,7 @@ const Home = () => {
       console.error("Erro:", error);
       setError(error);
       Alert.alert("Erro", "Não foi possível carregar os animes");
+      fetchAnimes();
     } finally {
       setLoading(false);
     }
