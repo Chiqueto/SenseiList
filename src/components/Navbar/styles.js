@@ -9,7 +9,6 @@ export const s = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: "#000",
-    borderTopWidth: 1,
     borderTopColor: "#fff",
     position: "absolute",
     bottom: 0,

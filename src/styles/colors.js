@@ -3,4 +3,13 @@ export const colors = {
   purple_dark: "#441A80",
   purple_light: "#B19CD9",
   purple_strong: "#A53BF5",
+  background: "#F5F5F5",
+  white: "#FFFFFF",
+  textPrimary: "#333333",
+  textSecondary: "#666666",
+  primary: "#FF9F43",
+  lightPrimary: "#FFF3E8",
+  shadow: "#000000",
+  lightGray: "#EEEEEE",
+  skeleton: "#e0e0e0",
 };

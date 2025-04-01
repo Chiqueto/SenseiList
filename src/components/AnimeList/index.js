@@ -17,17 +17,20 @@ const AnimeList = ({
   onAddToWatched,
   onRemoveFromWatched,
   isAnimeWatched = (animeId) =>
-    watchedAnimes.some((anime) => anime.mal_id === animeId), // Valor padrão
-  isWatchedPage = false, // Nova prop para identificar a página de assistidos
+    watchedAnimes.some((anime) => anime.mal_id === animeId),
+  isWatchedPage = false,
+  navigation,
 }) => {
   const renderItem = ({ item }) => (
-    <View style={styles.animeCard}>
+    <TouchableOpacity
+      style={styles.animeCard}
+      onPress={() => navigation.navigate("Anime", { id: item.mal_id })}
+    >
       <View style={styles.animeInfo}>
         <Text style={styles.animeTitle}>{item.title}</Text>
         <Text style={styles.animeRating}>{item.score || "N/A"}</Text>
 
         {isWatchedPage ? (
-          // Botão de remover para a página de assistidos
           <TouchableOpacity
             onPress={() => onRemoveFromWatched?.(item.mal_id)}
             style={[styles.watchButton, styles.removeButton]}
@@ -35,7 +38,6 @@ const AnimeList = ({
             <Text style={styles.watchButtonText}>Remover</Text>
           </TouchableOpacity>
         ) : (
-          // Botão normal para marcar como assistido
           <TouchableOpacity
             onPress={() =>
               isAnimeWatched(item.mal_id)
@@ -59,7 +61,7 @@ const AnimeList = ({
         source={{ uri: item.images.jpg.image_url }}
         style={styles.animeImage}
       />
-    </View>
+    </TouchableOpacity>
   );
 
   return (

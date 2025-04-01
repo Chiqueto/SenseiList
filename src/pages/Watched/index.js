@@ -109,6 +109,7 @@ const Watched = () => {
           watchedAnimes={watchedAnimes}
           onRemoveFromWatched={removeFromWatchedList}
           isWatchedPage={true}
+          navigation={navigation}
         />
       )}
 

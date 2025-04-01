@@ -4,18 +4,17 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
-  FlatList,
   ActivityIndicator,
   Alert,
 } from "react-native";
 import Navbar from "../../components/Navbar";
-import Input from "../../components/Input";
 import { s } from "./styles";
 import api from "../../services/api";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import FilterModal from "../../components/FilterModal";
 import AnimeList from "../../components/AnimeList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Input from "../../components/Input";
 import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
@@ -23,199 +22,124 @@ const Home = () => {
   const [watchedAnimes, setWatchedAnimes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
-  const searchTimeoutRef = useRef(null);
 
-  // Função para buscar animes
-  const fetchAnimes = useCallback(
-    async (query = "", page = 1, isNewSearch = false) => {
-      if (loading) return;
+  const navigation = useNavigation();
 
-      setLoading(true);
-      setError(null);
+  // Função simplificada para buscar animes
+  const fetchAnimes = useCallback(async () => {
+    if (loading) return;
 
-      try {
-        // Delay para evitar rate limit
-        await new Promise((resolve) => setTimeout(resolve, 350));
+    setLoading(true);
+    setError(null);
 
-        const params = {
-          page,
-          limit: 25,
-        };
+    try {
+      const response = await api.get(`/anime?page=${page}`);
 
-        if (query) {
-          params.q = query;
-        }
-
-        const response = await api.get("/anime", {
-          params,
-          timeout: 10000,
-        });
-
-        // Verificação da resposta
-        if (
-          !response.data ||
-          !response.data.data ||
-          !response.data.pagination
-        ) {
-          throw new Error("Estrutura de dados inválida da API");
-        }
-
-        const newAnimes = response.data.data;
-        const newPagination = response.data.pagination;
-
-        setPagination(newPagination);
-
-        if (isNewSearch || page === 1) {
-          setAnimes(newAnimes);
-        } else {
-          setAnimes((prev) => [...prev, ...newAnimes]);
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        setError(error);
-
-        if (error.response?.status === 500) {
-          Alert.alert(
-            "Erro no servidor",
-            "A API está temporariamente indisponível. Por favor, tente novamente mais tarde.",
-            [{ text: "OK" }]
-          );
-        } else {
-          Alert.alert(
-            "Erro",
-            "Não foi possível carregar os animes. Tente novamente.",
-            [{ text: "OK" }]
-          );
-        }
-      } finally {
-        setLoading(false);
+      if (!response.data?.data) {
+        throw new Error("Dados inválidos da API");
       }
-    },
-    [loading]
-  );
 
-  // Função de pesquisa com debounce
-  const handleSearch = useCallback(
-    (text) => {
-      setSearchQuery(text);
-      clearTimeout(searchTimeoutRef.current);
-
-      searchTimeoutRef.current = setTimeout(() => {
-        if (text.trim() === "") {
-          fetchAnimes("", 1, true); // Se o campo estiver vazio, carrega a lista normal
-        } else {
-          fetchAnimes(text, 1, true); // Faz a pesquisa com o texto digitado
-        }
-      }, 600); // Debounce de 600ms
-    },
-    [fetchAnimes]
-  );
+      setAnimes((prev) =>
+        page === 1 ? response.data.data : [...prev, ...response.data.data]
+      );
+      setPage((prev) => prev + 1);
+    } catch (error) {
+      console.error("Erro:", error);
+      setError(error);
+      Alert.alert("Erro", "Não foi possível carregar os animes");
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, page]);
 
   // Carrega mais animes quando chegar no final da lista
   const loadMoreAnimes = useCallback(() => {
-    if (!loading && pagination?.has_next_page && !error) {
-      const nextPage = pagination.current_page + 1;
-      fetchAnimes(searchQuery, nextPage);
+    if (!loading) {
+      fetchAnimes();
     }
-  }, [loading, pagination, error, searchQuery, fetchAnimes]);
+  }, [loading, fetchAnimes]);
 
-  // Carrega a lista de assistidos do AsyncStorage
+  // Carrega a lista de assistidos
   const loadWatchedAnimes = useCallback(async () => {
     try {
-      const storedAnimes = await AsyncStorage.getItem("@watchedAnimes");
-      if (storedAnimes) {
-        setWatchedAnimes(JSON.parse(storedAnimes));
-      }
+      const stored = await AsyncStorage.getItem("@watchedAnimes");
+      if (stored) setWatchedAnimes(JSON.parse(stored));
     } catch (error) {
-      console.error("Erro ao carregar animes assistidos:", error);
+      console.error("Erro ao carregar assistidos:", error);
     }
   }, []);
 
-  // Salva um anime na lista de assistidos
+  // Adiciona anime aos assistidos
   const addToWatchedList = useCallback(
     async (anime) => {
       try {
-        // Verifica se o anime já está na lista
         if (watchedAnimes.some((a) => a.mal_id === anime.mal_id)) {
-          Alert.alert("Aviso", "Este anime já está na sua lista de assistidos");
+          Alert.alert("Aviso", "Este anime já está na sua lista");
           return;
         }
 
-        const updatedList = [...watchedAnimes, anime];
-        setWatchedAnimes(updatedList);
-        await AsyncStorage.setItem(
-          "@watchedAnimes",
-          JSON.stringify(updatedList)
-        );
-        Alert.alert("Sucesso", `${anime.title} foi adicionado aos assistidos!`);
+        const updated = [...watchedAnimes, anime];
+        setWatchedAnimes(updated);
+        await AsyncStorage.setItem("@watchedAnimes", JSON.stringify(updated));
+        Alert.alert("Sucesso", `${anime.title} foi adicionado!`);
       } catch (error) {
-        console.error("Erro ao salvar anime assistido:", error);
-        Alert.alert("Erro", "Não foi possível adicionar aos assistidos");
+        console.error("Erro ao adicionar:", error);
+        Alert.alert("Erro", "Não foi possível adicionar");
       }
     },
     [watchedAnimes]
   );
 
-  // Remove um anime da lista de assistidos
+  // Remove anime dos assistidos
   const removeFromWatchedList = useCallback(
-    async (animeId) => {
+    async (id) => {
       try {
-        const updatedList = watchedAnimes.filter(
-          (anime) => anime.mal_id !== animeId
-        );
-        setWatchedAnimes(updatedList);
-        await AsyncStorage.setItem(
-          "@watchedAnimes",
-          JSON.stringify(updatedList)
-        );
-        Alert.alert("Removido", "Anime removido da lista de assistidos");
+        const updated = watchedAnimes.filter((a) => a.mal_id !== id);
+        setWatchedAnimes(updated);
+        await AsyncStorage.setItem("@watchedAnimes", JSON.stringify(updated));
+        Alert.alert("Removido", "Anime removido da lista");
       } catch (error) {
-        console.error("Erro ao remover anime assistido:", error);
+        console.error("Erro ao remover:", error);
       }
     },
     [watchedAnimes]
   );
 
-  // Verifica se um anime está na lista de assistidos
+  // Verifica se anime foi assistido
   const isAnimeWatched = useCallback(
-    (animeId) => {
-      return watchedAnimes.some((anime) => anime.mal_id === animeId);
-    },
+    (id) => watchedAnimes.some((a) => a.mal_id === id),
     [watchedAnimes]
   );
 
-  // Carrega os dados iniciais
+  // Carrega dados iniciais
   useEffect(() => {
     fetchAnimes();
     loadWatchedAnimes();
   }, []);
 
-  // Renderiza o footer da lista
+  // Componente de carregamento/erro
   const renderFooter = () => {
     if (loading) {
       return (
-        <View style={{ paddingVertical: 20 }}>
-          <ActivityIndicator size="large" color="#FFA500" />
-        </View>
+        <ActivityIndicator
+          size="large"
+          color="#FFA500"
+          style={{ padding: 20 }}
+        />
       );
     }
-
     if (error) {
       return (
         <TouchableOpacity
           style={s.retryButton}
-          onPress={() =>
-            fetchAnimes(searchQuery, pagination?.current_page || 1, true)
-          }
+          onPress={() => setPage(1) || fetchAnimes()}
         >
           <Text style={s.retryText}>Tentar novamente</Text>
         </TouchableOpacity>
       );
     }
-
     return null;
   };
 
@@ -225,11 +149,7 @@ const Home = () => {
       style={s.container}
     >
       <View style={s.menu}>
-        <Input
-          placeholder={"Pesquise pelo nome!"}
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
+        <Input placeholder={"Pesquise pelo nome!"} />
         <TouchableOpacity
           style={s.filterButton}
           onPress={() => setModalVisible(true)}
@@ -241,10 +161,13 @@ const Home = () => {
         </TouchableOpacity>
       </View>
 
-      {error && animes.length === 0 ? (
+      {error && !animes.length ? (
         <View style={s.errorContainer}>
-          <Text style={s.errorText}>Não foi possível carregar os animes</Text>
-          <TouchableOpacity style={s.retryButton} onPress={() => fetchAnimes()}>
+          <Text style={s.errorText}>Erro ao carregar animes</Text>
+          <TouchableOpacity
+            style={s.retryButton}
+            onPress={() => setPage(1) || fetchAnimes()}
+          >
             <Text style={s.retryText}>Tentar novamente</Text>
           </TouchableOpacity>
         </View>
@@ -254,10 +177,8 @@ const Home = () => {
           onEndReached={loadMoreAnimes}
           onEndReachedThreshold={0.4}
           ListFooterComponent={renderFooter}
-          watchedAnimes={watchedAnimes}
-          onAddToWatched={addToWatchedList}
-          onRemoveFromWatched={removeFromWatchedList}
-          isAnimeWatched={isAnimeWatched}
+          {...{ addToWatchedList, removeFromWatchedList, isAnimeWatched }}
+          navigation={navigation}
         />
       )}
 

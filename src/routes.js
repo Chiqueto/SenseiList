@@ -4,6 +4,7 @@ import Login from "./pages/Login/index";
 import { useFonts } from "expo-font";
 import Register from "./pages/Register/index";
 import Watched from "./pages/Watched";
+import AnimePage from "./pages/Anime/index";
 
 const Stack = createStackNavigator();
 const Routes = () => {
@@ -39,6 +40,11 @@ const Routes = () => {
       <Stack.Screen
         name="Watched"
         component={Watched}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Anime"
+        component={AnimePage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
