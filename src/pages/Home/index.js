@@ -19,11 +19,13 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const [animes, setAnimes] = useState([]);
+  const [filteredAnimes, setFilteredAnimes] = useState([]);
   const [watchedAnimes, setWatchedAnimes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
+  const [searchAnime, setSearchAnime] = useState("");
 
   const navigation = useNavigation();
 
@@ -54,14 +56,24 @@ const Home = () => {
     }
   }, [loading, page]);
 
-  // Carrega mais animes quando chegar no final da lista
+  useEffect(() => {
+    const fetchFilteredAnimes = async () => {
+      const response = await api.get(`/anime?q=${searchAnime}`);
+      if (response.data.data.length > 0 && searchAnime !== "") {
+        setFilteredAnimes(response.data.data);
+      } else {
+        setFilteredAnimes([]);
+      }
+    };
+    fetchFilteredAnimes();
+  }, [searchAnime]);
+
   const loadMoreAnimes = useCallback(() => {
     if (!loading) {
       fetchAnimes();
     }
   }, [loading, fetchAnimes]);
 
-  // Carrega a lista de assistidos
   const loadWatchedAnimes = useCallback(async () => {
     try {
       const stored = await AsyncStorage.getItem("@watchedAnimes");
@@ -71,7 +83,6 @@ const Home = () => {
     }
   }, []);
 
-  // Adiciona anime aos assistidos
   const addToWatchedList = useCallback(
     async (anime) => {
       try {
@@ -92,7 +103,6 @@ const Home = () => {
     [watchedAnimes]
   );
 
-  // Remove anime dos assistidos
   const removeFromWatchedList = useCallback(
     async (id) => {
       try {
@@ -143,13 +153,20 @@ const Home = () => {
     return null;
   };
 
+  const handleSearchSubmit = (event) => {
+    setSearchAnime(event.nativeEvent.text);
+  };
+
   return (
     <ImageBackground
       source={require("../../../assets/bg-gradient-app.png")}
       style={s.container}
     >
       <View style={s.menu}>
-        <Input placeholder={"Pesquise pelo nome!"} />
+        <Input
+          placeholder={"Pesquise pelo nome!"}
+          onSubmitEditing={handleSearchSubmit}
+        />
         <TouchableOpacity
           style={s.filterButton}
           onPress={() => setModalVisible(true)}
@@ -171,6 +188,19 @@ const Home = () => {
             <Text style={s.retryText}>Tentar novamente</Text>
           </TouchableOpacity>
         </View>
+      ) : { filteredAnimes } && searchAnime.length > 0 ? (
+        <AnimeList
+          animes={filteredAnimes}
+          onEndReached={loadMoreAnimes}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={renderFooter}
+          {...{
+            onAddToWatched: addToWatchedList,
+            onRemoveFromWatched: removeFromWatchedList,
+            isAnimeWatched,
+          }}
+          navigation={navigation}
+        />
       ) : (
         <AnimeList
           animes={animes}
