@@ -4,11 +4,11 @@
     "slug": "senseiList",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/icons/logo.png",
+    "icon": "./assets/icons/logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/icons/icons/logo.png",
+      "image": "./assets/icons/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,11 +19,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.chiqueto.senseiList"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "owner": "chiqueto",
+    "extra": {
+      "eas": {
+        "projectId": "7f809078-b42c-479a-ad5e-3f304a0372fc"
+      }
+    }
   }
 }
