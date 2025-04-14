@@ -32,7 +32,7 @@ const Register = () => {
   };
   return (
     <ImageBackground
-      source={require("../../../assets/bg-gradient.png")} // Caminho para a imagem
+      source={require("../../../assets//background/background.png")}
       style={s.container}
     >
       <View style={s.logoView}>

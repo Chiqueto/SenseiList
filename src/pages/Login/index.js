@@ -40,7 +40,7 @@ const Login = () => {
 
   return (
     <ImageBackground
-      source={require("../../../assets/bg-gradient.png")}
+      source={require("../../../assets//background/background.png")}
       style={s.container}
     >
       <View style={s.logoView}>

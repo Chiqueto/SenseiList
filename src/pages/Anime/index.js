@@ -85,7 +85,7 @@ const AnimePage = ({ route }) => {
 
   return (
     <ImageBackground
-      source={require("../../../assets/bg-gradient-app.png")}
+      source={require("../../../assets//background/background.png")}
       style={s.container}
     >
       <ScrollView
